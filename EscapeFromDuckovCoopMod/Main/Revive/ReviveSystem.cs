@@ -29,6 +29,8 @@ public class ReviveSystem : MonoBehaviour
     private bool _reviveKeyDown;
     private float _bleedingTimer;
     private GameObject _canvas3D;
+    private bool _hostDowned;
+    private float _hostBleedingHp = MaxBleedingHp;
 
     private void Awake()
     {
@@ -82,6 +84,18 @@ public class ReviveSystem : MonoBehaviour
 
         foreach (var id in toRemove)
             RemoveBleedingData(id);
+
+        if (_hostDowned)
+        {
+            _hostBleedingHp -= BleedingPerSecond;
+            BroadcastBleedingUpdate("HOST", _hostBleedingHp);
+
+            if (_hostBleedingHp <= 0f)
+            {
+                _hostDowned = false;
+                Server_TriggerHostTrueDeath();
+            }
+        }
     }
 
     private void BroadcastBleedingUpdate(string playerId, float bleedingHp)
@@ -112,6 +126,29 @@ public class ReviveSystem : MonoBehaviour
         _downedPlayers.Remove(playerId);
     }
 
+    private void Server_TriggerHostTrueDeath()
+    {
+        _hostDowned = false;
+        _hostBleedingHp = MaxBleedingHp;
+
+        var main = CharacterMainControl.Main;
+        if (main == null) return;
+
+        var h = main.Health;
+        if (h != null)
+            HealthM.Instance?.ForceSetHealth(h, h.MaxHealth, 0f, true);
+
+        DeadLootBox.Instance?.Server_SpawnPlayerTrueDeathLoot(main, "HOST");
+
+        var lootRpc = new DeadLootSpawnRpc
+        {
+            SceneIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex,
+            PlayerId = "HOST",
+            UseTombPrefab = false
+        };
+        CoopTool.SendRpc(in lootRpc);
+    }
+
     private void RemoveBleedingData(string playerId)
     {
         if (_bleedingPlayers.TryGetValue(playerId, out var data))
@@ -128,6 +165,15 @@ public class ReviveSystem : MonoBehaviour
         if (CharacterMainControl.Main == null) return;
 
         var localPos = CharacterMainControl.Main.transform.position;
+
+        if (_hostDowned && CharacterMainControl.Main != null)
+        {
+            if (NetService.Instance != null && !NetService.Instance.IsServer)
+            {
+                _nearbyDownedId = "HOST";
+            }
+        }
+
         foreach (var playerId in _downedPlayers)
         {
             if (NetService.Instance?.clientRemoteCharacters.TryGetValue(playerId, out var go) == true && go != null)
@@ -165,7 +211,27 @@ public class ReviveSystem : MonoBehaviour
             }
         }
 
+        if (_hostDowned && CharacterMainControl.Main != null)
+        {
+            var isClient = NetService.Instance != null && !NetService.Instance.IsServer;
+            if (isClient)
+            {
+                BleedingData data;
+                if (!_bleedingPlayers.TryGetValue("HOST", out data))
+                {
+                    data = CreateBleedingBar("HOST");
+                    _bleedingPlayers["HOST"] = data;
+                }
+
+                data.BarRoot.SetActive(true);
+                data.BarRoot.transform.position = CharacterMainControl.Main.transform.position + Vector3.up * BarHeight;
+                data.BarRoot.transform.rotation = Quaternion.identity;
+                data.FillImage.fillAmount = _hostBleedingHp / MaxBleedingHp;
+            }
+        }
+
         var aliveIds = new HashSet<string>(_downedPlayers);
+        if (_hostDowned) aliveIds.Add("HOST");
         var toRemove = new List<string>();
         foreach (var kvp in _bleedingPlayers)
         {
@@ -305,6 +371,13 @@ public class ReviveSystem : MonoBehaviour
     {
         if (rpc.IsDowned)
         {
+            if (playerId == "HOST")
+            {
+                _hostDowned = true;
+                _hostBleedingHp = rpc.BleedingHp > 0 ? rpc.BleedingHp : MaxBleedingHp;
+                return;
+            }
+
             _downedPlayers.Add(playerId);
 
             if (!_bleedingPlayers.TryGetValue(playerId, out var data))
@@ -319,6 +392,15 @@ public class ReviveSystem : MonoBehaviour
         }
         else
         {
+            if (playerId == "HOST")
+            {
+                _hostDowned = false;
+                _hostBleedingHp = MaxBleedingHp;
+                RemoveBleedingData("HOST");
+                RemovePromptLabel("HOST");
+                return;
+            }
+
             _downedPlayers.Remove(playerId);
             RemoveBleedingData(playerId);
             RemovePromptLabel(playerId);
@@ -336,6 +418,13 @@ public class ReviveSystem : MonoBehaviour
 
     public void Server_OnReviveRequest(LiteNetLib.NetPeer sender, string downedPlayerId)
     {
+        if (downedPlayerId == "HOST")
+        {
+            if (!_hostDowned) return;
+            Server_OnHostRevived();
+            return;
+        }
+
         if (!_downedPlayers.Contains(downedPlayerId)) return;
 
         _downedPlayers.Remove(downedPlayerId);
@@ -345,6 +434,56 @@ public class ReviveSystem : MonoBehaviour
         var rpc = new PlayerDownedStateRpc
         {
             PlayerId = downedPlayerId,
+            IsDowned = false,
+            BleedingHp = MaxBleedingHp
+        };
+        var writer = new NetDataWriter();
+        writer.Put((byte)Op.PLAYER_DOWNED_STATE);
+        rpc.Serialize(writer);
+        NetService.Instance?.netManager?.SendToAll(writer, DeliveryMethod.ReliableOrdered);
+    }
+
+    public void Server_OnHostDowned()
+    {
+        _hostDowned = true;
+        _hostBleedingHp = MaxBleedingHp;
+
+        var main = CharacterMainControl.Main;
+        if (main == null) return;
+
+        var h = main.Health;
+        if (h != null)
+            HealthM.Instance?.ForceSetHealth(h, h.MaxHealth, 1f, true);
+
+        var rpc = new PlayerDownedStateRpc
+        {
+            PlayerId = "HOST",
+            IsDowned = true,
+            BleedingHp = MaxBleedingHp
+        };
+        var writer = new NetDataWriter();
+        writer.Put((byte)Op.PLAYER_DOWNED_STATE);
+        rpc.Serialize(writer);
+        NetService.Instance?.netManager?.SendToAll(writer, DeliveryMethod.ReliableOrdered);
+    }
+
+    private void Server_OnHostRevived()
+    {
+        _hostDowned = false;
+        _hostBleedingHp = MaxBleedingHp;
+        RemoveBleedingData("HOST");
+        RemovePromptLabel("HOST");
+
+        var main = CharacterMainControl.Main;
+        if (main == null) return;
+
+        var h = main.Health;
+        if (h != null)
+            HealthM.Instance?.ForceSetHealth(h, h.MaxHealth, 1f, true);
+
+        var rpc = new PlayerDownedStateRpc
+        {
+            PlayerId = "HOST",
             IsDowned = false,
             BleedingHp = MaxBleedingHp
         };
@@ -371,6 +510,22 @@ public class ReviveSystem : MonoBehaviour
     }
 
     public bool IsDowned(string playerId) => _downedPlayers.Contains(playerId);
+    public bool IsHostDowned => _hostDowned;
+
+    public bool IsDownedByCharacter(CharacterMainControl cmc)
+    {
+        if (cmc == null) return false;
+        var service = NetService.Instance;
+        if (service == null) return false;
+
+        if (cmc == CharacterMainControl.Main && service.IsServer)
+            return _hostDowned;
+
+        if (service.TryGetPlayerId(cmc, out var playerId))
+            return _downedPlayers.Contains(playerId);
+
+        return false;
+    }
 
     public bool IsDownedByDamageReceiver(DamageReceiver receiver)
     {

@@ -135,7 +135,7 @@ internal static class AIThreatManager
 
         var total = damageScore + distanceScore + recencyBonus;
 
-        if (ReviveSystem.Instance?.IsDownedByDamageReceiver(entry.Target) == true)
+        if (ReviveSystem.Instance?.IsDownedByCharacter(entry.Target?.health?.TryGetCharacter()) == true)
             total *= 0.05f; // heavily de-prioritize downed teammates
 
         return total;

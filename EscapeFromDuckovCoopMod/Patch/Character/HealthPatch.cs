@@ -182,6 +182,24 @@ internal static class Patch_Health_DestroyOnDelay_Finalizer
     }
 }
 
+[HarmonyPatch(typeof(Health), "OnDead", typeof(DamageInfo))]
+internal static class Patch_Health_OnDead_PreventDowned
+{
+    private static bool Prefix(Health __instance)
+    {
+        var mod = ModBehaviourF.Instance;
+        if (mod == null || !mod.networkStarted) return true;
+        if (!mod.IsServer) return true;
+
+        var cmc = __instance.TryGetCharacter();
+        if (cmc == null) return true;
+        if (cmc == CharacterMainControl.Main && ReviveSystem.Instance != null && ReviveSystem.Instance.IsHostDowned)
+            return false;
+
+        return true;
+    }
+}
+
 [HarmonyPatch(typeof(Health), "Hurt")]
 internal static class Patch_Health_Hurt_AIdEAD
 {

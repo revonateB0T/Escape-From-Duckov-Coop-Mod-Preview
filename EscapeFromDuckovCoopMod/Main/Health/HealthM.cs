@@ -185,6 +185,11 @@ public class HealthM : MonoBehaviour
         var (max, cur) = ReadHealth(health);
         if (max <= 0f) return;
 
+        if (cur <= 0 && !IsHostDowned())
+        {
+            ReviveSystem.Instance?.Server_OnHostDowned();
+            return;
+        }
 
         BroadcastPlayerSnapshot(playerId, max, cur, damage.HasValue ? DamageForwardPayload.FromDamageInfo(damage) : (DamageForwardPayload?)null, null);
     }
@@ -562,6 +567,8 @@ public class HealthM : MonoBehaviour
 
         CreateRemoteCharacter.CreateRemoteCharacterForClient(playerId, pos, rot, st.CustomFaceJson).Forget();
     }
+
+    private bool IsHostDowned() => ReviveSystem.Instance != null && ReviveSystem.Instance.IsHostDowned;
 
     private static bool IsFinite(Vector3 value)
     {

@@ -383,7 +383,7 @@ public class SceneNet : MonoBehaviour
         var map = CoopTool.GetMapSelectionEntrylist(sceneTargetId);
         if (map != null && sceneLocationName == "OnPointerClick")
         {
-            IsMapSelectionEntry = false;  
+            IsMapSelectionEntry = false;
             SceneM.Call_NotifyEntryClicked_ByInvoke(MapSelectionView.Instance, map, null);
         }
         if (sceneLocationName == "DoTeleport")

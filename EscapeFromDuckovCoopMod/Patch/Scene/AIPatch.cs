@@ -32,14 +32,14 @@ public static class Patch_CharacterSpawnerRoot_StartSpawn
     {
         var svc = NetService.Instance;
 
-        if(MultiSceneCore.Instance.SceneInfo.ID == "Base" && svc.networkStarted)
+        if (MultiSceneCore.Instance.SceneInfo.ID == "Base" && svc.networkStarted)
             return true;
 
-        if(!svc.networkStarted)
-           return true;
-        
+        if (!svc.networkStarted)
+            return true;
+
         if (svc != null && !svc.IsServer)
-            return false;   
+            return false;
         return true;
     }
 }
@@ -94,7 +94,7 @@ public static class Patch_AICharacterController_Init
     {
         if (ai == null) return;
 
-     
+
 
         // 等待 1 秒钟，确保 AI 完全初始化然后就可以注册到 COOPManager 里通过数据库同步了~~
         var token = ai.GetCancellationTokenOnDestroy();

@@ -156,7 +156,7 @@ public class WeaponRequest
             SnapshotPosition = snapPos,
             SnapshotDirection = snapDir
         };
-        Debug.Log("Net_OnClientMeleeAttack "+ rpc.PlayerId);
+        Debug.Log("Net_OnClientMeleeAttack " + rpc.PlayerId);
         CoopTool.SendRpc(in rpc);
     }
 }

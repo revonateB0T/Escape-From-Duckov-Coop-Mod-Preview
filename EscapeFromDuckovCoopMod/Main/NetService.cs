@@ -224,7 +224,7 @@ public class NetService : MonoBehaviour, INetEventListener, IModNetworkService
             {
                 _playerInvincibleUntil.Remove(_st.EndPoint);
                 SceneNet.Instance._cliLastSceneIdByPlayer.Remove(_st.EndPoint);
-          
+
             }
             playerStatuses.Remove(peer);
         }

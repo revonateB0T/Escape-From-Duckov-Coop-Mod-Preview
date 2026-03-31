@@ -195,13 +195,13 @@ internal static class Patch_Health_Hurt_AIdEAD
 
         if (mod.IsServer)
         {
-            if(__instance.TryGetCharacter().GetComponentInChildren<RemoteAIReplicaTag>() == null)
+            if (__instance.TryGetCharacter().GetComponentInChildren<RemoteAIReplicaTag>() == null)
             {
                 if (__instance.IsDead)
                 {
                     DeadLootSpawnContext.InOnDead = __instance.TryGetCharacter();
                 }
-            }         
+            }
         }
 
         var character = __instance.TryGetCharacter();
@@ -342,7 +342,7 @@ internal static class Patch_Health_Hurt_HPClamp
             {
                 injected = true;
 
- 
+
                 yield return new CodeInstruction(OpCodes.Ldarg_0); // this
                 yield return new CodeInstruction(OpCodes.Ldarg_1); // damageInfo
                 yield return new CodeInstruction(OpCodes.Call, helper);
@@ -531,7 +531,7 @@ public static class HealthILHelper
 //            return;
 //        }
 
- 
+
 //        Traverse.Create(__result).Field<Image>("fill").Value.color = RemoteHealthColor;
 //        Traverse.Create(__result).Field<Image>("followFill").Value.color = RemoteHealthColor;
 //        //Traverse.Create(__result).Field<Image>("hurtBlink").Value.color = RemoteHealthColor;
@@ -546,7 +546,7 @@ public static class HealthILHelper
 //        return cmc != null && cmc == CharacterMainControl.Main;
 //    }
 
- 
+
 
 //    private static bool TryResolvePlayerMetadata(Health health, out string playerId, out string fallbackName)
 //    {

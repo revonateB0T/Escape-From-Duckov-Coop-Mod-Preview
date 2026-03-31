@@ -69,7 +69,7 @@ internal static class Patch_ServerForwardRemotePlayerDamage
             if (service == null || !service.TryGetPlayerId(cmc, out var targetId) || string.IsNullOrEmpty(targetId))
                 return true;
 
-            if(__0.fromCharacter != null)
+            if (__0.fromCharacter != null)
             {
                 if (__0.fromCharacter.GetComponentsInChildren<AutoRequestHealthBar>() != null)
                 {
@@ -77,7 +77,7 @@ internal static class Patch_ServerForwardRemotePlayerDamage
                     LocalHitKillFx.RememberLastBaseDamage(__0.damageValue);
                 }
             }
-           
+
 
             var request = new PlayerDamageRequestRpc
             {

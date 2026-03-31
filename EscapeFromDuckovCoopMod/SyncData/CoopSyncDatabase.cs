@@ -110,7 +110,7 @@ public sealed class AISyncRegistry
                 ? cmc.characterPreset.name
                 : cmc.characterPreset.nameKey;
 
- 
+
 
         _byController[controller] = entry;
         if (entry.PositionKey != 0)

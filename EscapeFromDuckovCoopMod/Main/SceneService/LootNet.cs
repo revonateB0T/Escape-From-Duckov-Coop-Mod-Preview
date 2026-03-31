@@ -1,4 +1,4 @@
-// Escape-From-Duckov-Coop-Mod-Preview
+﻿// Escape-From-Duckov-Coop-Mod-Preview
 // Copyright (C) 2025  Mr.sans and InitLoader's team
 //
 // This program is not a free software.
@@ -26,8 +26,8 @@ using UnityEngine;
 
 namespace EscapeFromDuckovCoopMod;
 
-    public class LootNet
-    {
+public class LootNet
+{
     public readonly Dictionary<uint, Item> _cliPendingPut = new();
     public readonly Dictionary<Item, (Item newItem, Inventory destInv, int destPos, Slot destSlot)> _cliSwapByVictim = new();
     public bool _applyingLootState;
@@ -129,7 +129,7 @@ namespace EscapeFromDuckovCoopMod;
 
         var itemCount = reader.GetInt();
         var itemSnapshots = new List<ItemSnapshot>();
-        
+
         for (int i = 0; i < itemCount; i++)
         {
             try
@@ -142,9 +142,9 @@ namespace EscapeFromDuckovCoopMod;
                 Debug.LogError($"[DEATH] Error reading item {i}: {ex}");
             }
         }
-        
+
         Debug.Log($"[DEATH] Read {itemSnapshots.Count} item snapshots from client");
-        
+
         // NOW spawn with the pre-read data
         Server_SpawnDeadPlayerLoot(pos, itemSnapshots);
     }
@@ -152,7 +152,7 @@ namespace EscapeFromDuckovCoopMod;
     private async void Server_SpawnDeadPlayerLoot(Vector3 position, List<ItemSnapshot> itemSnapshots)
     {
         try
-        {            
+        {
             // Get the loot box prefab
             var prefab = LootManager.Instance.ResolveDeadLootPrefabOnServer();
             if (!prefab)
@@ -160,7 +160,7 @@ namespace EscapeFromDuckovCoopMod;
                 Debug.LogError("[DEATH] Cannot find loot box prefab!");
                 return;
             }
-            
+
             // Spawn the loot container
             var lootObj = GameObject.Instantiate(prefab.gameObject, position, Quaternion.identity);
 
@@ -171,7 +171,7 @@ namespace EscapeFromDuckovCoopMod;
                 GameObject.Destroy(lootObj);
                 return;
             }
-            
+
             var inventory = lootBox.Inventory;
             if (!inventory)
             {
@@ -182,9 +182,9 @@ namespace EscapeFromDuckovCoopMod;
 
             var itemCount = itemSnapshots.Count;
             Debug.Log($"[DEATH] Spawning loot at {position} with {itemCount} items");
-            
+
             inventory.SetCapacity(Mathf.Max(itemCount, 10));
-            
+
             for (int i = 0; i < itemCount; i++)
             {
                 try
@@ -199,17 +199,17 @@ namespace EscapeFromDuckovCoopMod;
                     Debug.LogError($"[DEATH] Error creating item {i}: {ex}");
                 }
             }
-            
+
             // Register the loot box
             var posKey = LootManager.Instance.ComputeLootKey(lootObj.transform);
             Debug.Log($"[DEATH] Computed position key: {posKey}");
-            
+
             if (posKey != 0)
             {
                 CoopSyncDatabase.Loot.Register(lootBox, inventory);
                 Debug.Log($"[DEATH] Registered in CoopSyncDatabase");
             }
-            
+
             // Also register in InteractableLootbox.Inventories
             try
             {
@@ -224,15 +224,15 @@ namespace EscapeFromDuckovCoopMod;
             {
                 Debug.LogWarning($"[DEATH] Could not register in InteractableLootbox.Inventories: {ex}");
             }
-            
+
             Debug.Log($"[DEATH] Loot container spawned successfully!");
-            
+
         }
         catch (Exception ex)
         {
             Debug.LogError($"[DEATH] FATAL Error spawning loot: {ex}");
         }
-    }    
+    }
 
     private int NextVersion(Inventory inv)
     {

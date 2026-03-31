@@ -257,7 +257,7 @@ public class MModUILayoutBuilder
         BuildServerInfoCard(scrollContent);
 
         // 难度选择
-       // BuildDifficultyCard(scrollContent);
+        // BuildDifficultyCard(scrollContent);
 
         // Direct模式面板
         BuildDirectModePanel(scrollContent);
@@ -337,7 +337,7 @@ public class MModUILayoutBuilder
     /// <summary>
     /// 创建难度选择卡片
     /// </summary>
-   
+
 
     /// <summary>
     /// 创建Direct模式面板
@@ -427,4 +427,3 @@ public class MModUILayoutBuilder
         //_ui.CreateModernButton("Debug", actionsCard.transform, CoopLocalization.Get("ui.debug.printLootBoxes"), _ui.DebugPrintLootBoxes, -1, MModUI.ModernColors.Warning, 40, 15);
     }
 }
-

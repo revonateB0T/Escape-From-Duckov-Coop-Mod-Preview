@@ -22,7 +22,7 @@ namespace EscapeFromDuckovCoopMod
         public bool pingPong = false;
 
         // 可选：热键开关显示
-        public KeyCode toggleKey = KeyCode.None; 
+        public KeyCode toggleKey = KeyCode.None;
         public bool visible = true;
 
         private Canvas _canvas;

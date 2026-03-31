@@ -46,7 +46,7 @@ public class SendLocalPlayerStatus : MonoBehaviour
     {
         if (!IsServer) return;
 
-        if(LevelManager.Instance == null || MultiSceneCore.Instance == null) return;
+        if (LevelManager.Instance == null || MultiSceneCore.Instance == null) return;
 
         var statuses = new List<PlayerStatusPayload>();
 

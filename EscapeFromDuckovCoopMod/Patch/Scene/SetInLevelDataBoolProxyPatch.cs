@@ -1,4 +1,4 @@
-namespace EscapeFromDuckovCoopMod;
+﻿namespace EscapeFromDuckovCoopMod;
 
 [HarmonyPatch(typeof(SetInLevelDataBoolProxy), nameof(SetInLevelDataBoolProxy.SetToTarget))]
 internal static class Patch_SetInLevelDataBoolProxy_SetToTarget

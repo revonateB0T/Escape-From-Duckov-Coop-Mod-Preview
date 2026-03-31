@@ -53,186 +53,186 @@ public static class ItemTool
             durabilityLoss = 0f;
         }
     }
-        private const StringComparison QuestTagComparison = StringComparison.OrdinalIgnoreCase;
+    private const StringComparison QuestTagComparison = StringComparison.OrdinalIgnoreCase;
 
-        public static bool ContainsQuestItem(Item item, HashSet<Item> visited = null)
+    public static bool ContainsQuestItem(Item item, HashSet<Item> visited = null)
+    {
+        if (!item) return false;
+
+        visited ??= new HashSet<Item>();
+        if (visited.Contains(item)) return false;
+        visited.Add(item);
+
+        if (HasQuestTag(item))
+            return true;
+
+        try
         {
-            if (!item) return false;
-
-            visited ??= new HashSet<Item>();
-            if (visited.Contains(item)) return false;
-            visited.Add(item);
-
-            if (HasQuestTag(item))
-                return true;
-
-            try
+            var inv = item.Inventory;
+            var cap = inv?.Capacity ?? 0;
+            for (var i = 0; i < cap; i++)
             {
-                var inv = item.Inventory;
-                var cap = inv?.Capacity ?? 0;
-                for (var i = 0; i < cap; i++)
+                var child = inv.GetItemAt(i);
+                if (child != null && ContainsQuestItem(child, visited))
+                    return true;
+            }
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            var slots = item.Slots;
+            if (slots != null)
+            {
+                foreach (var slot in slots)
                 {
-                    var child = inv.GetItemAt(i);
+                    if (slot == null) continue;
+                    var child = slot.Content;
                     if (child != null && ContainsQuestItem(child, visited))
                         return true;
                 }
             }
-            catch
-            {
-            }
-
-            try
-            {
-                var slots = item.Slots;
-                if (slots != null)
-                {
-                    foreach (var slot in slots)
-                    {
-                        if (slot == null) continue;
-                        var child = slot.Content;
-                        if (child != null && ContainsQuestItem(child, visited))
-                            return true;
-                    }
-                }
-            }
-            catch
-            {
-            }
-
-            return false;
+        }
+        catch
+        {
         }
 
-        public static bool InventoryHasQuestItem(Inventory inv)
+        return false;
+    }
+
+    public static bool InventoryHasQuestItem(Inventory inv)
+    {
+        if (inv == null) return false;
+
+        try
         {
-            if (inv == null) return false;
-
-            try
+            var capacity = inv.Capacity;
+            for (var i = 0; i < capacity; i++)
             {
-                var capacity = inv.Capacity;
-                for (var i = 0; i < capacity; i++)
-                {
-                    var item = inv.GetItemAt(i);
-                    if (item != null && ContainsQuestItem(item))
-                        return true;
-                }
-            }
-            catch
-            {
-            }
-
-            return false;
-        }
-
-        public static bool HasQuestTag(GameObject go)
-        {
-            if (!go) return false;
-
-            try
-            {
-                foreach (var component in go.GetComponents<Component>())
-                {
-                    if (component == null) continue;
-                    if (HasQuestTag(component))
-                        return true;
-                }
-            }
-            catch
-            {
-            }
-
-            return false;
-        }
-
-        public static bool HasQuestTag(Item item)
-        {
-            if (!item) return false;
-
-            try
-            {
-                if (HasQuestTag(item.Tags))
+                var item = inv.GetItemAt(i);
+                if (item != null && ContainsQuestItem(item))
                     return true;
             }
-            catch
-            {
-            }
-
-            try
-            {
-                if (HasQuestTag(item.gameObject))
-                    return true;
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                var agent = item.ActiveAgent ?? item.AgentUtilities?.ActiveAgent;
-                if (agent && HasQuestTag(agent.gameObject))
-                    return true;
-            }
-            catch
-            {
-            }
-
-            return false;
+        }
+        catch
+        {
         }
 
-        private static bool HasQuestTag(object tagHolder)
-        {
-            if (tagHolder == null) return false;
+        return false;
+    }
 
-            try
+    public static bool HasQuestTag(GameObject go)
+    {
+        if (!go) return false;
+
+        try
+        {
+            foreach (var component in go.GetComponents<Component>())
             {
-                var tagsProperty = tagHolder.GetType().GetProperty("Tags");
-                if (tagsProperty?.GetValue(tagHolder) is TagCollection tags && HasQuestTag(tags))
+                if (component == null) continue;
+                if (HasQuestTag(component))
                     return true;
             }
-            catch
-            {
-            }
-
-            return false;
+        }
+        catch
+        {
         }
 
-        private static bool HasQuestTag(TagCollection tags)
+        return false;
+    }
+
+    public static bool HasQuestTag(Item item)
+    {
+        if (!item) return false;
+
+        try
         {
-            if (tags == null) return false;
-
-            try
-            {
-                bool hasQuest = false;
-                // Itemid 1411-1412 have both "Quest" and "Special" tags, but 
-                // its usable item and wasn't visible to client at all.
-                bool hasSpecial = false; 
-                
-                foreach (var tag in tags)
-                {
-                    var name = tag?.name;
-                    if (string.IsNullOrEmpty(name)) continue;
-                    
-                    if (name.IndexOf("Quest", QuestTagComparison) >= 0)
-                        hasQuest = true;
-                    
-                    if (name.IndexOf("Special", QuestTagComparison) >= 0)
-                        hasSpecial = true;
-                }
-                
-                // Return true only if has Quest but NOT Special
-                return hasQuest && !hasSpecial;
-            }
-            catch
-            {
-            }
-
-            return false;
+            if (HasQuestTag(item.Tags))
+                return true;
+        }
+        catch
+        {
         }
 
-        public static void AddNetDropTag(GameObject go, uint id)
+        try
         {
-            if (!go) return;
-            var tag = go.GetComponent<NetDropTag>() ?? go.AddComponent<NetDropTag>();
-            tag.id = id;
+            if (HasQuestTag(item.gameObject))
+                return true;
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            var agent = item.ActiveAgent ?? item.AgentUtilities?.ActiveAgent;
+            if (agent && HasQuestTag(agent.gameObject))
+                return true;
+        }
+        catch
+        {
+        }
+
+        return false;
+    }
+
+    private static bool HasQuestTag(object tagHolder)
+    {
+        if (tagHolder == null) return false;
+
+        try
+        {
+            var tagsProperty = tagHolder.GetType().GetProperty("Tags");
+            if (tagsProperty?.GetValue(tagHolder) is TagCollection tags && HasQuestTag(tags))
+                return true;
+        }
+        catch
+        {
+        }
+
+        return false;
+    }
+
+    private static bool HasQuestTag(TagCollection tags)
+    {
+        if (tags == null) return false;
+
+        try
+        {
+            bool hasQuest = false;
+            // Itemid 1411-1412 have both "Quest" and "Special" tags, but 
+            // its usable item and wasn't visible to client at all.
+            bool hasSpecial = false;
+
+            foreach (var tag in tags)
+            {
+                var name = tag?.name;
+                if (string.IsNullOrEmpty(name)) continue;
+
+                if (name.IndexOf("Quest", QuestTagComparison) >= 0)
+                    hasQuest = true;
+
+                if (name.IndexOf("Special", QuestTagComparison) >= 0)
+                    hasSpecial = true;
+            }
+
+            // Return true only if has Quest but NOT Special
+            return hasQuest && !hasSpecial;
+        }
+        catch
+        {
+        }
+
+        return false;
+    }
+
+    public static void AddNetDropTag(GameObject go, uint id)
+    {
+        if (!go) return;
+        var tag = go.GetComponent<NetDropTag>() ?? go.AddComponent<NetDropTag>();
+        tag.id = id;
     }
 
     public static void AddNetDropTag(Item item, uint id)

@@ -54,12 +54,12 @@ public class HostPlayerApply
             if (slotHash == 500) COOPManager.ChangeHeadsetModel(characterModel, null);
             return;
         }
-        if(int.TryParse(itemId, out var ids1))
+        if (int.TryParse(itemId, out var ids1))
         {
             var item = await COOPManager.GetItemAsync(ids1);
             remoteObj.GetComponent<CharacterMainControl>().CharacterItem.TryPlug(item);
         }
-       
+
 
         //string slotName = null;
         //if (slotHash == CharacterEquipmentController.armorHash)
@@ -161,7 +161,7 @@ public class HostPlayerApply
                 if (item != null)
                 {
 
-                   // cm.CharacterItem.TryPlug(item);
+                    // cm.CharacterItem.TryPlug(item);
                     cm.ChangeHoldItem(item);
                     try
                     {

@@ -1,4 +1,4 @@
-using LiteNetLib.Utils;
+﻿using LiteNetLib.Utils;
 using UnityEngine;
 
 namespace EscapeFromDuckovCoopMod;

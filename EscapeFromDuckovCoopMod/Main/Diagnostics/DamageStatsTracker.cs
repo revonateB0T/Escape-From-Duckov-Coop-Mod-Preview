@@ -73,7 +73,7 @@ public class DamageStatsTracker : MonoBehaviour
             return;
         }
 
-        if(COOPManager.AI.IsHostHurt)
+        if (COOPManager.AI.IsHostHurt)
         {
             COOPManager.AI.IsHostHurt = false;
             return;

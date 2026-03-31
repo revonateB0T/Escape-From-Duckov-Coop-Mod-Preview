@@ -8,9 +8,9 @@ namespace EscapeFromDuckovCoopMod
     public class SteamP2PLoader : MonoBehaviour
     {
         public static SteamP2PLoader Instance { get; private set; }
-        public  bool UseSteamP2P = true;
-        public  bool FallbackToUDP = true;
-        public  bool _isOptimized = false;
+        public bool UseSteamP2P = true;
+        public bool FallbackToUDP = true;
+        public bool _isOptimized = false;
         public void Init()
         {
             Instance = this;

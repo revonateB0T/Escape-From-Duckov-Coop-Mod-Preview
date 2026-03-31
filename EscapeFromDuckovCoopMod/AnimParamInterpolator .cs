@@ -88,7 +88,7 @@ public class AnimParamInterpolator : MonoBehaviour
     private void LateUpdate()
     {
         if (!anim || _buf.Count == 0) return;
-        if(LevelManager.Instance == null || MultiSceneCore.Instance == null) return;
+        if (LevelManager.Instance == null || MultiSceneCore.Instance == null) return;
         var serverLoading = NetService.Instance.IsServer && SceneNet.Instance.IsServerLoadInProgress();
         if (serverLoading)
         {

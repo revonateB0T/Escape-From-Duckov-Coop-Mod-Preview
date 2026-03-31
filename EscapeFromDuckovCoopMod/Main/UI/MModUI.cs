@@ -476,7 +476,7 @@ public class MModUI : MonoBehaviour
             int fontSize = Mathf.Max(10, Mathf.RoundToInt(baseFontSize * scale));
             float padding = basePadding * scale;
 
-          
+
 
             // ========= 顶部红色提示文字（自适应缩放） =========
             if (!string.IsNullOrEmpty(_tipText) && Time.time < _tipExpireTime)

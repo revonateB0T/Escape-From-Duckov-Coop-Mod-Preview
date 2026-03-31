@@ -372,6 +372,18 @@ public class ReviveSystem : MonoBehaviour
 
     public bool IsDowned(string playerId) => _downedPlayers.Contains(playerId);
 
+    public bool IsDownedByDamageReceiver(DamageReceiver receiver)
+    {
+        if (receiver == null) return false;
+        var health = receiver.health;
+        if (health == null) return false;
+        var cmc = health.TryGetCharacter();
+        if (cmc == null) return false;
+        var service = NetService.Instance;
+        if (service == null || !service.TryGetPlayerId(cmc, out var playerId)) return false;
+        return _downedPlayers.Contains(playerId);
+    }
+
     private void OnDestroy()
     {
         if (Instance == this) Instance = null;

@@ -133,7 +133,12 @@ internal static class AIThreatManager
 
         var recencyBonus = Mathf.Lerp(20f, 0f, Mathf.Clamp01(age / 5f)); // sharp boost for the most recent attacker
 
-        return damageScore + distanceScore + recencyBonus;
+        var total = damageScore + distanceScore + recencyBonus;
+
+        if (ReviveSystem.Instance?.IsDownedByDamageReceiver(entry.Target) == true)
+            total *= 0.05f; // heavily de-prioritize downed teammates
+
+        return total;
     }
 
     private static bool IsTargetDead(DamageReceiver target)

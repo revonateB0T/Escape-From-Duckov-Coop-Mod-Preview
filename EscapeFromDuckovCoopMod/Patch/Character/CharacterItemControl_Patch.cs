@@ -63,6 +63,8 @@ internal static class Patch_OnDead
         var mod = ModBehaviourF.Instance;
         if (mod == null || !mod.networkStarted) return true;
 
+        if (__instance == CharacterMainControl.Main && ReviveSystem.Instance != null && ReviveSystem.Instance.IsHostDowned)
+            return false;
 
         if (mod.IsServer)
         {

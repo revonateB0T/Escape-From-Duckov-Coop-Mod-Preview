@@ -244,6 +244,41 @@ public class DeadLootBox : MonoBehaviour
         return string.Empty;
     }
 
+    public InteractableLootbox Server_SpawnPlayerTrueDeathLoot(CharacterMainControl whoDied, string playerId)
+    {
+        if (!IsServer || whoDied == null) return null;
+        try
+        {
+            var prefab = whoDied.deadLootBoxPrefab;
+            if (!prefab)
+            {
+                prefab = LootManager.Instance.ResolveDeadLootPrefabOnServer();
+            }
+            if (!prefab)
+            {
+                Debug.LogError("[TrueDeath] Could not resolve dead loot prefab");
+                return null;
+            }
+
+            var lootObj = UnityEngine.Object.Instantiate(prefab.gameObject, whoDied.transform.position, Quaternion.identity);
+            var lootBox = lootObj.GetComponent<InteractableLootbox>();
+            if (!lootBox)
+            {
+                Debug.LogError("[TrueDeath] Spawned object has no InteractableLootbox");
+                UnityEngine.Object.Destroy(lootObj);
+                return null;
+            }
+
+            Server_OnDeadLootboxSpawned(lootBox, whoDied, false, playerId);
+            return lootBox;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("[TrueDeath] Server_SpawnPlayerTrueDeathLoot failed: " + e);
+            return null;
+        }
+    }
+
     public void Server_OnDeadLootboxSpawned(InteractableLootbox box, CharacterMainControl whoDied, bool useTombPrefab = false, string playerId = null)
     {
         if (!IsServer || box == null) return;

@@ -88,6 +88,8 @@ public static class RpcRegistry
         Register<ModApiReplayRequestRpc>(RPCModApi.HandleModApiReplayRequest);
         Register<DamageStatsSyncRpc>(RPCDiagnostics.HandleDamageStats);
         Register<DamageStatsReportRpc>(RPCDiagnostics.HandleDamageReport);
+        Register<PlayerDownedStateRpc>(RPCPlayer.HandlePlayerDownedState);
+        Register<ReviveRequestRpc>(RPCPlayer.HandleReviveRequest);
     }
 
     public static void Register<T>(Action<RpcContext, T> handler)

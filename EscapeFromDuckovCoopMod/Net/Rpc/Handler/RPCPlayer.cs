@@ -580,6 +580,17 @@ namespace EscapeFromDuckovCoopMod
             weapons.Add(new WeaponSyncData { SlotHash = slotHash, ItemId = itemId, Snapshot = snapshot });
         }
 
+        public static void HandlePlayerDownedState(RpcContext context, PlayerDownedStateRpc message)
+        {
+            ReviveSystem.Instance?.OnPlayerDownedStateReceived(message.PlayerId, message);
+        }
+
+        public static void HandleReviveRequest(RpcContext context, ReviveRequestRpc message)
+        {
+            if (context.Service == null || !context.IsServer) return;
+            ReviveSystem.Instance?.Server_OnReviveRequest(context.Sender, message.DownedPlayerId);
+        }
+
 
 
     }

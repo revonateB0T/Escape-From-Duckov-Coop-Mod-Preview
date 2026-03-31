@@ -128,6 +128,7 @@ public class ModBehaviourF : MonoBehaviour
 
         gameObject.AddComponent<DamageStatsTracker>();
         gameObject.AddComponent<DamageStatsUI>();
+        gameObject.AddComponent<ReviveSystem>();
     }
 
     private void Update()

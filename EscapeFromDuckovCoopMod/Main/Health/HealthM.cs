@@ -575,7 +575,7 @@ public class HealthM : MonoBehaviour
                  float.IsInfinity(value.x) || float.IsInfinity(value.y) || float.IsInfinity(value.z) || float.IsInfinity(value.w));
     }
 
-    public void ForceRemoteOnDead(CharacterMainControl cmc)
+    public void ForceRemoteOnDead(CharacterMainControl cmc, string playerId = null)
     {
         if (cmc == null || cmc == CharacterMainControl.Main) return;
 
@@ -584,7 +584,19 @@ public class HealthM : MonoBehaviour
 
         if (cmc.Health.CurrentHealth <= 0)
         {
-            GameObject.Destroy(cmc.gameObject);
+            ForceSetHealth(h, h.MaxHealth, 1f, true);
+            if (!string.IsNullOrEmpty(playerId))
+            {
+                ReviveSystem.Instance?.Server_BroadcastDowned(playerId);
+            }
+            else
+            {
+                var service = NetService.Instance;
+                if (service != null && service.TryGetPlayerId(cmc, out var pid) && !string.IsNullOrEmpty(pid))
+                {
+                    ReviveSystem.Instance?.Server_BroadcastDowned(pid);
+                }
+            }
         }
 
     }
@@ -592,13 +604,18 @@ public class HealthM : MonoBehaviour
     private void EnsureRemoteDeathState(CharacterMainControl cmc, Health h, float cur)
     {
         if (cmc == null || h == null) return;
-        if (cmc == CharacterMainControl.Main) return; // 自己的死亡流程由本地逻辑处理
+        if (cmc == CharacterMainControl.Main) return;
 
         var id = cmc.GetInstanceID();
 
         if(cur <= 0)
         {
-            GameObject.Destroy(cmc.gameObject);
+            ForceSetHealth(h, h.MaxHealth, 1f, true);
+            var service = NetService.Instance;
+            if (service != null && service.TryGetPlayerId(cmc, out var playerId) && !string.IsNullOrEmpty(playerId))
+            {
+                ReviveSystem.Instance?.Server_BroadcastDowned(playerId);
+            }
         }
 
     }

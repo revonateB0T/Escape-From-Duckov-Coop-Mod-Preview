@@ -123,5 +123,8 @@ public enum Op : byte
     LOOT_REQ_TAKE = 253, // 客户端 -> 主机：请求“取出”
     LOOT_PUT_OK = 254, // 主机 -> 发起客户端：确认“放入”成功，附回执 token
     LOOT_TAKE_OK = 255, // 主机 -> 发起客户端：确认“取出”成功 + 返回 Item 快照
-    LOOT_DENY = 249 // 主机 -> 发起客户端：拒绝（例如并发冲突/格子无物品/容量不足）
+    LOOT_DENY = 249, // 主机 -> 发起客户端：拒绝（例如并发冲突/格子无物品/容量不足）
+
+    PLAYER_DOWNED_STATE = 237, // 主机 -> 全体：玩家倒地状态变更
+    REVIVE_REQUEST = 238,       // 客户端 -> 主机：请求复活倒地队友
 }

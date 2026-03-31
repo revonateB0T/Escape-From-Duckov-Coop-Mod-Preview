@@ -94,6 +94,6 @@ public static class RPCLoot
 
         var max = h.MaxHealth > 0f ? h.MaxHealth : 1f;
         HealthM.Instance?.ApplyHealthAndEnsureBar(go, max, 0f);
-        HealthM.Instance?.ForceRemoteOnDead(cmc);
+        HealthM.Instance?.ForceRemoteOnDead(cmc, playerId);
     }
 }

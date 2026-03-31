@@ -120,7 +120,7 @@ public class HealthM : MonoBehaviour
         _cliLastSentHp = (max, cur);
         _cliNextSendHp = now + CLIENT_SEND_INTERVAL;
 
-        if(cur < 0f && !_clientDeathReported)
+        if (cur < 0f && !_clientDeathReported)
         {
             // Lock to avoid sending multiple death reports before player respawns
             _clientDeathReported = true;
@@ -149,7 +149,7 @@ public class HealthM : MonoBehaviour
             CharacterMainControl.Main.BackpackSlot().Content
         };
         var items = new List<Item>();
-        
+
         foreach (var item in equipedItems)
         {
             if (item != null) items.Add(item);
@@ -170,7 +170,7 @@ public class HealthM : MonoBehaviour
         {
             ItemTool.WriteItemSnapshot(w, ItemTool.MakeSnapshot(item));
         }
-    
+
         CoopTool.SendReliable(w);
         Debug.Log($"Reporting Death message to server!");
     }
@@ -338,7 +338,7 @@ public class HealthM : MonoBehaviour
         var playerId = service?.GetPlayerId(peer);
         if (string.IsNullOrEmpty(playerId)) return;
         if (!_srvPlayerSnapshots.TryGetValue(playerId, out var snap)) return;
-       // Debug.Log("Server_ApplyCachedHealth "+ snap.max+" "+snap.cur);
+        // Debug.Log("Server_ApplyCachedHealth "+ snap.max+" "+snap.cur);
         ApplyHealthAndEnsureBar(instance, snap.max, snap.cur);
     }
 
@@ -491,26 +491,26 @@ public class HealthM : MonoBehaviour
     public void ApplyHealthAndEnsureBar(GameObject go, float max, float cur)
     {
         if (!go) return;
-        
+
         var cmc = go.GetComponent<CharacterMainControl>();
         var h = cmc.Health;
         if (!cmc || !h) return;
 
         h.autoInit = false;
-      //  Debug.Log("ApplyHealthAndEnsureBar "+cmc.Health.MaxHealth);
+        //  Debug.Log("ApplyHealthAndEnsureBar "+cmc.Health.MaxHealth);
         HealthTool.BindHealthToCharacter(h, cmc);
 
         var clampedCur = Mathf.Max(0f, cur);
         ForceSetHealth(h, max, clampedCur, false);
 
-        if(NetService.Instance.IsServer)
+        if (NetService.Instance.IsServer)
         {
-            if(cmc.aiCharacterController == null)
+            if (cmc.aiCharacterController == null)
             {
                 h.showHealthBar = true;
             }
         }
-        if(!NetService.Instance.IsServer)
+        if (!NetService.Instance.IsServer)
         {
             h.showHealthBar = true;
         }
@@ -596,12 +596,12 @@ public class HealthM : MonoBehaviour
 
         var id = cmc.GetInstanceID();
 
-        if(cur <= 0)
+        if (cur <= 0)
         {
             GameObject.Destroy(cmc.gameObject);
         }
 
     }
 
-  
+
 }

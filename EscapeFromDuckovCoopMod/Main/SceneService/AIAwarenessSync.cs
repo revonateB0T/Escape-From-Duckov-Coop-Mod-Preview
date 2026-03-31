@@ -159,7 +159,7 @@ public static class AIAwarenessSync
             var cmc = COOPManager.AI?.TryGetCharacter(message.Id);
             if (cmc == null)
                 return;
-           // Debug.Log($"[AIAwarenessSync] Received PopText for AI Id={message.Id}: \"{message.Text}\" (speed={message.Speed})");
+            // Debug.Log($"[AIAwarenessSync] Received PopText for AI Id={message.Id}: \"{message.Text}\" (speed={message.Speed})");
             cmc.PopText(message.Text, message.Speed);
         }
     }

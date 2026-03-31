@@ -185,87 +185,87 @@ public static class CreateRemoteCharacter
             var instance = player.gameObject;
             var characterModel = instance.GetComponent<CharacterMainControl>();
 
-        // Traverse.Create(characterModel).Field<Item>("characterItem").Value = itemLoaded;
-        characterModel.SetItem(itemLoaded);
+            // Traverse.Create(characterModel).Field<Item>("characterItem").Value = itemLoaded;
+            characterModel.SetItem(itemLoaded);
 
-        var cmc = instance.GetComponent<CharacterMainControl>();
-        COOPManager.StripAllHandItems(cmc);
+            var cmc = instance.GetComponent<CharacterMainControl>();
+            COOPManager.StripAllHandItems(cmc);
 
-        instance.transform.SetPositionAndRotation(position, rotation);
+            instance.transform.SetPositionAndRotation(position, rotation);
 
-        var cmc0 = instance.GetComponentInChildren<CharacterMainControl>(true);
-        if (cmc0 && cmc0.modelRoot)
-        {
-            var e = rotation.eulerAngles;
-            cmc0.modelRoot.transform.rotation = Quaternion.Euler(0f, e.y, 0f);
-        }
+            var cmc0 = instance.GetComponentInChildren<CharacterMainControl>(true);
+            if (cmc0 && cmc0.modelRoot)
+            {
+                var e = rotation.eulerAngles;
+                cmc0.modelRoot.transform.rotation = Quaternion.Euler(0f, e.y, 0f);
+            }
 
-        //cmc.SetTeam(Teams.middle);
+            //cmc.SetTeam(Teams.middle);
 
-        MakeRemotePhysicsPassive(instance);
-        CustomFace.StripAllCustomFaceParts(instance);
+            MakeRemotePhysicsPassive(instance);
+            CustomFace.StripAllCustomFaceParts(instance);
 
-        // 如果入参为空，尽量从已知状态或待应用表拿，再应用（允许为空；为空时后续状态更新会补）
-        if (string.IsNullOrEmpty(customFaceJson))
-        {
-            if (NetService.Instance.clientPlayerStatuses.TryGetValue(playerId, out var st) && !string.IsNullOrEmpty(st.CustomFaceJson))
-                customFaceJson = st.CustomFaceJson;
-            else if (CustomFace._cliPendingFace.TryGetValue(playerId, out var pending) && !string.IsNullOrEmpty(pending))
-                customFaceJson = pending;
-        }
+            // 如果入参为空，尽量从已知状态或待应用表拿，再应用（允许为空；为空时后续状态更新会补）
+            if (string.IsNullOrEmpty(customFaceJson))
+            {
+                if (NetService.Instance.clientPlayerStatuses.TryGetValue(playerId, out var st) && !string.IsNullOrEmpty(st.CustomFaceJson))
+                    customFaceJson = st.CustomFaceJson;
+                else if (CustomFace._cliPendingFace.TryGetValue(playerId, out var pending) && !string.IsNullOrEmpty(pending))
+                    customFaceJson = pending;
+            }
 
-        if (NetService.Instance.clientPlayerStatuses.TryGetValue(playerId, out var st1) && !string.IsNullOrEmpty(st1.PlayerName))
-        {
-            var playerIcon = Traverse.Create(levelManager).Field<Sprite>("characterMapIcon").Value;
-            Color cA = new Color(0f, 1f, 0f, 0.5f);     // 半透明绿
+            if (NetService.Instance.clientPlayerStatuses.TryGetValue(playerId, out var st1) && !string.IsNullOrEmpty(st1.PlayerName))
+            {
+                var playerIcon = Traverse.Create(levelManager).Field<Sprite>("characterMapIcon").Value;
+                Color cA = new Color(0f, 1f, 0f, 0.5f);     // 半透明绿
 
-            CreateMapElement(characterModel, cA, playerIcon, st1.PlayerName);
-        }
-        else
-        {
-            var playerIcon = Traverse.Create(levelManager).Field<Sprite>("characterMapIcon").Value;
-            Color cA = new Color(0f, 1f, 0f, 0.5f);     // 半透明绿
+                CreateMapElement(characterModel, cA, playerIcon, st1.PlayerName);
+            }
+            else
+            {
+                var playerIcon = Traverse.Create(levelManager).Field<Sprite>("characterMapIcon").Value;
+                Color cA = new Color(0f, 1f, 0f, 0.5f);     // 半透明绿
 
-            CreateMapElement(characterModel, cA, playerIcon, "Player");
-        }
-   
-
-
-        CustomFace.Client_ApplyFaceIfAvailable(playerId, instance, customFaceJson);
+                CreateMapElement(characterModel, cA, playerIcon, "Player");
+            }
 
 
-        try
-        {
-            var cm = characterModel.characterModel;
 
-            COOPManager.ChangeArmorModel(cm, null);
-            COOPManager.ChangeHelmatModel(cm, null);
-            COOPManager.ChangeFaceMaskModel(cm, null);
-            COOPManager.ChangeBackpackModel(cm, null);
-            COOPManager.ChangeHeadsetModel(cm, null);
-        }
-        catch
-        {
-        }
+            CustomFace.Client_ApplyFaceIfAvailable(playerId, instance, customFaceJson);
 
-        instance.AddComponent<RemoteReplicaTag>();
-        var anim = instance.GetComponentInChildren<Animator>(true);
-        if (anim)
-        {
-            anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            anim.updateMode = AnimatorUpdateMode.Normal;
-        }
 
-        var h = cmc.Health;
-        if (h) h.autoInit = false;
-        instance.AddComponent<AutoRequestHealthBar>();
-        CoopTool.Client_ApplyPendingRemoteIfAny(playerId, instance);
+            try
+            {
+                var cm = characterModel.characterModel;
 
-        NetInterpUtil.Attach(instance)?.Push(position, rotation);
-        AnimInterpUtil.Attach(instance);
-        cmc.gameObject.SetActive(false);
-        clientRemoteCharacters[playerId] = instance;
-        cmc.gameObject.SetActive(true);
+                COOPManager.ChangeArmorModel(cm, null);
+                COOPManager.ChangeHelmatModel(cm, null);
+                COOPManager.ChangeFaceMaskModel(cm, null);
+                COOPManager.ChangeBackpackModel(cm, null);
+                COOPManager.ChangeHeadsetModel(cm, null);
+            }
+            catch
+            {
+            }
+
+            instance.AddComponent<RemoteReplicaTag>();
+            var anim = instance.GetComponentInChildren<Animator>(true);
+            if (anim)
+            {
+                anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                anim.updateMode = AnimatorUpdateMode.Normal;
+            }
+
+            var h = cmc.Health;
+            if (h) h.autoInit = false;
+            instance.AddComponent<AutoRequestHealthBar>();
+            CoopTool.Client_ApplyPendingRemoteIfAny(playerId, instance);
+
+            NetInterpUtil.Attach(instance)?.Push(position, rotation);
+            AnimInterpUtil.Attach(instance);
+            cmc.gameObject.SetActive(false);
+            clientRemoteCharacters[playerId] = instance;
+            cmc.gameObject.SetActive(true);
 
             COOPManager.FriendlyFire?.OnRemoteCharacterCreated(cmc);
             ModApiEvents.RaisePlayerSpawned(cmc, playerId, false);
@@ -314,7 +314,7 @@ public static class CreateRemoteCharacter
         }
     }
 
-    public static void CreateMapElement(CharacterMainControl mainCharacter,Color color,Sprite characterMapIcon,string Name)
+    public static void CreateMapElement(CharacterMainControl mainCharacter, Color color, Sprite characterMapIcon, string Name)
     {
         if (MultiSceneCore.Instance != null)
         {

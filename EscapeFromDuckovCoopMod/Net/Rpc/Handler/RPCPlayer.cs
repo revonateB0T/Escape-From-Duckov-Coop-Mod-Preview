@@ -434,7 +434,7 @@ namespace EscapeFromDuckovCoopMod
             if (vehicleType <= 0)
             {
                 if (_playerVehicleBindings.TryGetValue(playerId, out var oldVehicleId) && oldVehicleId != 0)
-                _playerVehicleBindings.Remove(playerId);
+                    _playerVehicleBindings.Remove(playerId);
 
                 var rider = riderObj.GetComponentInChildren<CharacterMainControl>();
                 if (rider)

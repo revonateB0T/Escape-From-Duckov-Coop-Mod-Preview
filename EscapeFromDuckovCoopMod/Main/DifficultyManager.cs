@@ -336,10 +336,10 @@ public static class DifficultyManager
     private static DifficultyCustomSettings _customSettings = DifficultyCustomSettings.FromSettings(
         new DifficultySettings(
             270f, 1400f, 0.15f, 3f, 3f,
-            1.5f, 1.5f,  1.5f,
-            0.1f, 0.15f,  0.1f, 0.1f,
+            1.5f, 1.5f, 1.5f,
+            0.1f, 0.15f, 0.1f, 0.1f,
             0.1f, 0.1f,
-            true,  0.2f,
+            true, 0.2f,
             0.15f, 0.25f, 0.1f, 0.15f,
             1f,
             0f,

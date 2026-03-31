@@ -1,4 +1,4 @@
-namespace EscapeFromDuckovCoopMod;
+﻿namespace EscapeFromDuckovCoopMod;
 
 public static class RPCModApi
 {

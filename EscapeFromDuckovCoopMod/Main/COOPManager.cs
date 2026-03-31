@@ -359,9 +359,9 @@ public class COOPManager
         var bufflist = Traverse.Create(GameplayDataSettings.Buffs).Field<List<Buff>>("allBuffs").Value;
         if (bufflist != null)
         {
-            foreach(var i in bufflist)
+            foreach (var i in bufflist)
             {
-                if(i.ID == buffId)
+                if (i.ID == buffId)
                 {
                     return i;
                 }
@@ -405,8 +405,8 @@ public class COOPManager
         // 不管换上还是清空，先把该 socket 槽位里的旧可视对象清掉，避免残留
         ClearChildren(tSocket);
 
-      
-       // characterModel.characterMainControl.CharacterItem.TryPlug(item);
+
+        // characterModel.characterMainControl.CharacterItem.TryPlug(item);
         characterModel.characterMainControl.ChangeHoldItem(item);
 
 
@@ -439,7 +439,7 @@ public class COOPManager
         //if (duck != null)
         //    duck.handheldSocket = handheldSocket;
 
-  
+
         //// 设为 socket 的子物体并归零局部变换
         //var tr = itemAgent.transform;
         //tr.SetParent(tSocket, true);
@@ -606,12 +606,12 @@ public class COOPManager
     public static void TeleportAiClear()
     {
         if (ModBehaviourF.Instance.IsServer) return;
-            
-        foreach(var i in Object.FindObjectsOfType<CharacterMainControl>(true))
+
+        foreach (var i in Object.FindObjectsOfType<CharacterMainControl>(true))
         {
             try
             {
-                if(i == LevelManager.Instance.MainCharacter)
+                if (i == LevelManager.Instance.MainCharacter)
                 {
                     continue;
 

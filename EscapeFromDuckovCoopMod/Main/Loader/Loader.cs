@@ -78,7 +78,7 @@ public class ModBehaviour : Duckov.Modding.ModBehaviour
         SafeInit<AISyncSettingsUI>(ui => ui.Init());
         SafeInit<Send_ClientStatus>(s => s.Init());
         SafeInit<DeadLootBox>(s => s.Init());
-        
+
     }
 
     private void SafeInit<T>(Action<T> init) where T : Component

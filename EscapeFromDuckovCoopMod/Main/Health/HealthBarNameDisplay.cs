@@ -43,7 +43,7 @@ public class HealthBarNameDisplay : MonoBehaviour
         {
             _container.SetActive(false);
         }
-     
+
     }
 
     private void OnDisable()
@@ -54,7 +54,7 @@ public class HealthBarNameDisplay : MonoBehaviour
 
     private void OnDestroy()
     {
-       // TeardownUi();
+        // TeardownUi();
     }
 
     public void Configure(string playerId, string fallbackName, Health health, HealthBar healthBar)
@@ -98,7 +98,7 @@ public class HealthBarNameDisplay : MonoBehaviour
         _nameText.color = Color.white;
         _nameText.alignment = TextAlignmentOptions.Center;
         _nameText.text = ResolveDisplayName();
-       
+
 
         var layoutElement = _nameText.gameObject.AddComponent<LayoutElement>();
         layoutElement.minWidth = 40f;

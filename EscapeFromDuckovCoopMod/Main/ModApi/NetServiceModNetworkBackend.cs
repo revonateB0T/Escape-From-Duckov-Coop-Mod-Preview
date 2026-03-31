@@ -1,4 +1,4 @@
-using LiteNetLib;
+﻿using LiteNetLib;
 using EscapeFromDuckovCoopMod;
 
 namespace EscapeFromDuckovCoopMod;

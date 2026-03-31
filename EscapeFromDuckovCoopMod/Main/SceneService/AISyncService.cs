@@ -468,7 +468,7 @@ public sealed class AISyncService
             info.toDamageReceiver = receiver;
 
         var bak = DeadLootSpawnContext.InOnDead;
-       // DeadLootSpawnContext.InOnDead = cmc;
+        // DeadLootSpawnContext.InOnDead = cmc;
         try
         {
             IsHostHurt = true;
@@ -479,7 +479,7 @@ public sealed class AISyncService
         }
         finally
         {
-          //  DeadLootSpawnContext.InOnDead = bak;
+            //  DeadLootSpawnContext.InOnDead = bak;
         }
     }
 
@@ -1248,7 +1248,7 @@ public sealed class AISyncService
             var cmc = controller.CharacterMainControl;
             if (!cmc) return;
 
-          //  Debug.Log($"[AI][SERVER] PopulateEntryMetadata id={entry.Id} name={controller.name} model={(cmc.characterModel ? cmc.characterModel.name : "null")} preset={(cmc.characterPreset ? cmc.characterPreset.name : "null")} presetKey={(cmc.characterPreset ? cmc.characterPreset.nameKey : "null")} isVehicle={cmc.isVehicle} vehicleAnim={cmc.vehicleAnimationType}");
+            //  Debug.Log($"[AI][SERVER] PopulateEntryMetadata id={entry.Id} name={controller.name} model={(cmc.characterModel ? cmc.characterModel.name : "null")} preset={(cmc.characterPreset ? cmc.characterPreset.name : "null")} presetKey={(cmc.characterPreset ? cmc.characterPreset.nameKey : "null")} isVehicle={cmc.isVehicle} vehicleAnim={cmc.vehicleAnimationType}");
 
             entry.Activated = IsControllerActivated(controller, cmc);
             entry.SpawnPosition = controller.transform.position;
@@ -2022,7 +2022,7 @@ public sealed class AISyncService
 
     private CharacterMainControl ResolveAttacker(RpcContext context)
     {
-        if ( context.Sender == null)
+        if (context.Sender == null)
             return null;
 
         try
@@ -2615,7 +2615,7 @@ public sealed class AISyncService
             if (!prefab || !host) return;
 
             var characterItemInstance = await Coopbase.LoadOrCreateCharacterItemInstance();
-           // var modelInstance = Object.Instantiate(prefab);
+            // var modelInstance = Object.Instantiate(prefab);
             //var instance = Object.Instantiate(host.gameObject, entry.SpawnPosition, entry.SpawnRotation);
             var characterMainControl = await LevelManager.Instance.CharacterCreator.CreateCharacter(characterItemInstance, prefab, entry.SpawnPosition, entry.SpawnRotation);
             var instance = characterMainControl ? characterMainControl.gameObject : null;
@@ -2633,7 +2633,7 @@ public sealed class AISyncService
                 return;
             }
 
-          //  cmc.SetCharacterModel(modelInstance);
+            //  cmc.SetCharacterModel(modelInstance);
             if (cmc.characterModel)
                 cmc.characterModel.characterMainControl = cmc;
 
@@ -2642,11 +2642,11 @@ public sealed class AISyncService
 
             ApplyCharacterPreset(cmc, entry.CharacterPresetKey);
             TryApplyVehicleSpeedStats(characterItemInstance, entry);
-           // MultiplyCharacterStat(characterItemInstance,"WalkSpeed",cmc.characterPreset.moveSpeedFactor);
-           // MultiplyCharacterStat(characterItemInstance,"RunSpeed", cmc.characterPreset.moveSpeedFactor);
-            
+            // MultiplyCharacterStat(characterItemInstance,"WalkSpeed",cmc.characterPreset.moveSpeedFactor);
+            // MultiplyCharacterStat(characterItemInstance,"RunSpeed", cmc.characterPreset.moveSpeedFactor);
+
             ApplyVehicleState(cmc, entry);
-            ApplySpecialAttachments(cmc,entry);
+            ApplySpecialAttachments(cmc, entry);
             cmc.SetTeam(entry.Team);
             MakeReplicaPassive(cmc);
             TryAttachHideIfFoundEnemyReplica(entry, instance, cmc);
@@ -2657,13 +2657,13 @@ public sealed class AISyncService
                 modelRoot.gameObject.SetActive(false);
                 entry.ShowHealthBar = false;
             }
-            
+
             ApplyCustomFace(cmc.characterModel, entry.CustomFaceJson);
             await ApplyEquipmentAsync(cmc.characterModel, entry.Equipment, entry.Weapons, entry.WeaponSnapshots);
             TryApplyVehicleSpeedStats(characterItemInstance, entry);
 
-           // MultiplyCharacterStat(characterItemInstance, "WalkSpeed", cmc.characterPreset.moveSpeedFactor);
-           // MultiplyCharacterStat(characterItemInstance, "RunSpeed", cmc.characterPreset.moveSpeedFactor);
+            // MultiplyCharacterStat(characterItemInstance, "WalkSpeed", cmc.characterPreset.moveSpeedFactor);
+            // MultiplyCharacterStat(characterItemInstance, "RunSpeed", cmc.characterPreset.moveSpeedFactor);
 
             var health = cmc.Health;
             if (health)
@@ -2705,11 +2705,11 @@ public sealed class AISyncService
                     Object.Destroy(autoRequest);
             }
 
-            if(entry.IsVehicle)
+            if (entry.IsVehicle)
             {
                 cmc.Health.showHealthBar = false;
             }
-            
+
             var replica = new RemoteAIReplica(entry.Id, instance, cmc, entry, this);
             _clientReplicas[entry.Id] = replica;
             replica.ApplyState(entry);
@@ -2774,7 +2774,7 @@ public sealed class AISyncService
 
         if (hasDeathInfo && _clientLastDamage.TryGetValue(replica.Id, out var lastDamage))
         {
-           // Debug.Log($"[AI][CLIENT] Forcing death event on replica {replica.Id}");
+            // Debug.Log($"[AI][CLIENT] Forcing death event on replica {replica.Id}");
             var cmc = replica.Character;
             var health = cmc ? cmc.Health : null;
             if (health)
@@ -2782,16 +2782,16 @@ public sealed class AISyncService
                 var receiver = cmc ? cmc.mainDamageReceiver : null;
                 if (!receiver && cmc)
                     receiver = cmc.GetComponentInChildren<DamageReceiver>(true);
-              //  Debug.Log($"[AI][CLIENT] Replica {replica.Id} has receiver: {(receiver != null)}");
+                //  Debug.Log($"[AI][CLIENT] Replica {replica.Id} has receiver: {(receiver != null)}");
                 var info = lastDamage;
-               // Debug.Log($"[AI][CLIENT] DamageInfo for replica {replica.Id}: DamageValue={info.damageValue}, FinalDamage={info.finalDamage} crit：{info.crit}  fromCharacter:{info.fromCharacter != null} fromWeaponItemID:{info.fromWeaponItemID}");
+                // Debug.Log($"[AI][CLIENT] DamageInfo for replica {replica.Id}: DamageValue={info.damageValue}, FinalDamage={info.finalDamage} crit：{info.crit}  fromCharacter:{info.fromCharacter != null} fromWeaponItemID:{info.fromWeaponItemID}");
                 info.damageValue = 99999f;
                 info.finalDamage = 99999f;
                 if (info.toDamageReceiver == null)
                     info.toDamageReceiver = receiver;
                 if (info.fromCharacter == null)
                     info.fromCharacter = cmc;
-               // Debug.Log($"[AI][CLIENT] Invoking OnDeadEvent for replica {replica.Id}");
+                // Debug.Log($"[AI][CLIENT] Invoking OnDeadEvent for replica {replica.Id}");
                 health.OnDeadEvent?.Invoke(info);
             }
 
@@ -3273,19 +3273,19 @@ public sealed class AISyncService
             if (vehicleAnimationType == 0)
                 vehicleAnimationType = cmc.characterPreset.vehicleAnimationType;
         }
-        if(isVehicle)
+        if (isVehicle)
         {
-           // cmc.FootStepMaterialType = Duckov.AudioManager.FootStepMaterialType.horse;
+            // cmc.FootStepMaterialType = Duckov.AudioManager.FootStepMaterialType.horse;
             cmc.Health.showHealthBar = false;
         }
         cmc.isVehicle = isVehicle;
         cmc.vehicleAnimationType = vehicleAnimationType;
     }
 
-    private static void ApplySpecialAttachments(CharacterMainControl cmc,AISyncEntry aISyncEntry)
+    private static void ApplySpecialAttachments(CharacterMainControl cmc, AISyncEntry aISyncEntry)
     {
         if (!cmc || !cmc.characterPreset) return;
-        if(aISyncEntry.Team != Teams.player) return;
+        if (aISyncEntry.Team != Teams.player) return;
         var bases = cmc.characterPreset.specialAttachmentBases;
         if (bases == null || bases.Count == 0) return;
 
@@ -3302,8 +3302,8 @@ public sealed class AISyncService
         var ready = AISpecialAttachmentLateBinderUtil.Ensure(cmc);
         if (ready) return;
 
-       // var binder = cmc.GetComponent<AISpecialAttachmentLateBinder>() ?? cmc.gameObject.AddComponent<AISpecialAttachmentLateBinder>();
-       // binder.Init(cmc);
+        // var binder = cmc.GetComponent<AISpecialAttachmentLateBinder>() ?? cmc.gameObject.AddComponent<AISpecialAttachmentLateBinder>();
+        // binder.Init(cmc);
     }
 
     private static void MakeReplicaPassive(CharacterMainControl cmc)
@@ -3907,7 +3907,7 @@ public sealed class AISyncService
             }
         }
 
-       
+
         private void OnHurt(DamageInfo info)
         {
             //if (_suppressHealthReport || _service == null || _health == null) return;

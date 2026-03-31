@@ -209,7 +209,7 @@ public class ModBehaviourF : MonoBehaviour
             syncTimer += Time.deltaTime;
             if (syncTimer >= syncInterval)
             {
-               // if (!serverLoading)
+                // if (!serverLoading)
                 {
                     SendLocalPlayerStatus.Instance.SendPositionUpdate();
                     SendLocalPlayerStatus.Instance.SendAnimationStatus();
@@ -249,7 +249,7 @@ public class ModBehaviourF : MonoBehaviour
                 _exitReqDeadline = Time.unscaledTime + 3f;
             }
 
-            if(LevelManager.Instance != null)
+            if (LevelManager.Instance != null)
             {
                 if (IsServer)
                 {
@@ -269,7 +269,7 @@ public class ModBehaviourF : MonoBehaviour
                 }
             }
 
-            
+
 
             if (NetService.Instance.netManager != null)
             {
@@ -299,19 +299,19 @@ public class ModBehaviourF : MonoBehaviour
             else SceneNet.Instance.Client_SendReadySet(SceneNet.Instance.localReady); // 客户端上报主机
         }
 
-            if (networkStarted)
+        if (networkStarted)
+        {
+            SceneNet.Instance.TrySendSceneReadyOnce();
+            if (IsServer)
             {
-                SceneNet.Instance.TrySendSceneReadyOnce();
-                if (IsServer)
-                {
-                    SceneNet.Instance.Server_TryExecutePendingBeginLoad();
-                    SceneNet.Instance.Server_TryExecutePendingLoad();
-                }
-                if (_envReqSid != SceneNet.Instance._sceneReadySidSent)
-                {
-                    _envReqSid = SceneNet.Instance._sceneReadySidSent;
-                    COOPManager.Weather.Client_RequestSnapshot();
-                }
+                SceneNet.Instance.Server_TryExecutePendingBeginLoad();
+                SceneNet.Instance.Server_TryExecutePendingLoad();
+            }
+            if (_envReqSid != SceneNet.Instance._sceneReadySidSent)
+            {
+                _envReqSid = SceneNet.Instance._sceneReadySidSent;
+                COOPManager.Weather.Client_RequestSnapshot();
+            }
 
             if (!IsServer && _exitReqSid != SceneNet.Instance._sceneReadySidSent)
             {
@@ -416,8 +416,8 @@ public class ModBehaviourF : MonoBehaviour
                 }
             }
         }
-        }
-    
+    }
+
 
 
     private void OnEnable()
@@ -459,7 +459,7 @@ public class ModBehaviourF : MonoBehaviour
     private void LevelManager_OnLevelInitialized()
     {
         SceneNet.Instance.TrySendSceneReadyOnce();
-       
+
         if (IsServer)
         {
             SceneNet.Instance.Server_ClearLoadInProgress();
@@ -474,7 +474,7 @@ public class ModBehaviourF : MonoBehaviour
         }
     }
 
-  
+
 
     private void OnSceneUnloaded_ClearRegistries(Scene scene)
     {
@@ -493,7 +493,7 @@ public class ModBehaviourF : MonoBehaviour
     //arg!!!!!!!!!!!
     private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        if(IsServer)
+        if (IsServer)
         {
             SceneNet.Instance.Server_ClearLoadInProgress();
         }
@@ -590,11 +590,11 @@ public class ModBehaviourF : MonoBehaviour
                 break;
 
             case Op.PLAYER_DEAD_LOOT_SPAWN:
-            {
-                if (!IsServer) break;
-                COOPManager.LootNet.Server_HandlePlayerDeathWithInventory(reader);
-                break;
-            }
+                {
+                    if (!IsServer) break;
+                    COOPManager.LootNet.Server_HandlePlayerDeathWithInventory(reader);
+                    break;
+                }
 
             case Op.LOOT_REQ_SPLIT:
                 {
@@ -708,7 +708,7 @@ public class ModBehaviourF : MonoBehaviour
         if (!networkStarted) return;
         COOPManager.destructible.BuildDestructibleIndex();
         COOPManager.ExplosiveBarrels.BuildIndex();
-      
+
     }
 
     private CharacterMainControl ResolveAttacker(string playerId)

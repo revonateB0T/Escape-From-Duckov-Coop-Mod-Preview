@@ -68,9 +68,9 @@ public sealed class ItemNet
                 }
             }
 
-        CoopSyncDatabase.Drops.Clear();
-        _pendingPickups.Clear();
-    }
+            CoopSyncDatabase.Drops.Clear();
+            _pendingPickups.Clear();
+        }
 
         const int maxSpawnsPerFrame = 6;
         var processed = 0;

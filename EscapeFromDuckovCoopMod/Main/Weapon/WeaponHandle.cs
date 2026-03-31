@@ -253,9 +253,9 @@ public class WeaponHandle
      float distance, bool isFake, ProjectileContext ctx, CharacterMainControl shooterCMC, ItemAgent_Gun overrideGun = null,
      int aiId = 0)
     {
-       
+
         if (!shooterCMC)
-        {  
+        {
             shooterCMC = TryResolveShooter(shooterId, aiId, out overrideGun);
         }
 
@@ -273,7 +273,7 @@ public class WeaponHandle
             {
                 ctx.team = LevelManager.Instance.MainCharacter.Team;
             }
-           
+
         }
 
 
@@ -330,15 +330,15 @@ public class WeaponHandle
         if (!pfb && _projectilePrefabCache.TryGetValue(weaponType, out var cachedPfb) && cachedPfb)
         {
             pfb = cachedPfb;
-          
+
         }
 
         if (!pfb)
         {
             pfb = GameplayDataSettings.Prefabs.DefaultBullet;
-           
+
         }
-     
+
         if (weaponType != 0 && pfb)
         {
             _projectilePrefabCache[weaponType] = pfb;
@@ -387,7 +387,7 @@ public class WeaponHandle
         ItemAgent_Gun gun = null;
         if (clientRemoteCharacters.TryGetValue(message.ShooterId, out var who) && who)
         {
-             controller = who.GetComponent<CharacterMainControl>();
+            controller = who.GetComponent<CharacterMainControl>();
             gun = controller ? controller.GetGun() : null;
         }
 
@@ -522,7 +522,7 @@ public class WeaponHandle
             SnapshotPosition = message.SnapshotPosition,
             SnapshotDirection = message.SnapshotDirection
         };
-      
+
         Client_HandleMeleeSwing(in broadcast);
         CoopTool.SendRpc(in broadcast, sender);
     }

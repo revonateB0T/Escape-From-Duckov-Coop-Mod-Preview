@@ -49,7 +49,7 @@ public static class Patch_SceneLoaderProxy_Authority
             return false;
         }
 
-        if(__instance.name == "CustomFace" || __instance.name == "SelectDifficulty")
+        if (__instance.name == "CustomFace" || __instance.name == "SelectDifficulty")
         {
             MModUI.ShowTip("客户端请在单机进行设置! Please configure the client on a standalone machine!");
             return false;
@@ -133,9 +133,9 @@ public static class Patch_SceneLoaderProxy_Authority
 //            return;
 
 //        COOPManager.TeleportAiClear();
-      
+
 //        CoopSyncDatabase.AI.Clear();
-       
+
 //        COOPManager.AI?.Reset();
 
 //        Debug.Log("[SCENE] MultiSceneTeleporter 触发，已清理 AI 缓存与数据库，等待主机重新同步。");
@@ -161,14 +161,14 @@ internal static class Patch_Mapen_DoTeleport
 {
     private static bool Prefix(MultiSceneTeleporter __instance)
     {
-   
+
         var mod = ModBehaviourF.Instance;
         if (mod == null || !mod.networkStarted) return true;
         if (SceneNet.Instance.allowLocalSceneLoad) return true;
         if (!mod.IsServer) return false;
-    
+
         SceneNet.Instance.IsDoteleportMap = true;
-       // SceneNet.Instance.Host_BeginSceneVote_Simple(__instance.Target.SceneID, "", false, false, false, "DoTeleport");
+        // SceneNet.Instance.Host_BeginSceneVote_Simple(__instance.Target.SceneID, "", false, false, false, "DoTeleport");
         if (mod.IsServer)
         {
             SceneNet.Instance.Host_BeginSceneVote_Simple(__instance.Target.SceneID, __instance.name, false, false, false, "DoTeleport");

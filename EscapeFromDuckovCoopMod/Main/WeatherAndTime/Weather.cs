@@ -670,4 +670,3 @@ internal struct StormSnapshot
     public float StormSleepPercent;
     public float StormRemainPercent;
 }
-

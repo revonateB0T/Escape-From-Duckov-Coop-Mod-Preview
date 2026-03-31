@@ -295,4 +295,3 @@ public static class SceneTriggerResetter
         }
     }
 }
-

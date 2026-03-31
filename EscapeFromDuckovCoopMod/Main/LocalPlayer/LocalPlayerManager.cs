@@ -135,8 +135,8 @@ public class LocalPlayerManager : MonoBehaviour
 
         // 3) 如果还是没拿到，尝试识别 Base
         if (string.IsNullOrEmpty(sceneId))
-            // Base 作为“家/大厅”，仍视为在游戏里，并归一成固定ID，便于双方比对
-            // （常规工程里 Base 的常量是 "Base"）
+        // Base 作为“家/大厅”，仍视为在游戏里，并归一成固定ID，便于双方比对
+        // （常规工程里 Base 的常量是 "Base"）
         {
             sceneId = SceneInfoCollection.BaseSceneID; // "Base"
         }
@@ -346,7 +346,7 @@ public class LocalPlayerManager : MonoBehaviour
             }
 
             if (currentIsInGame && levelManager != null)
-                // 不再二次创建本地主角；只做 Scene 就绪上报，由主机撮合同图远端创建
+            // 不再二次创建本地主角；只做 Scene 就绪上报，由主机撮合同图远端创建
             {
                 SceneNet.Instance.TrySendSceneReadyOnce();
             }

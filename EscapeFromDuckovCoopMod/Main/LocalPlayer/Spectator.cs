@@ -48,7 +48,7 @@ public class Spectator : MonoBehaviour
     public bool TryEnterSpectatorOnDeath(DamageInfo dmgInfo)
     {
         var main = CharacterMainControl.Main;
-       // if (!LevelManager.LevelInited || main == null) return false;
+        // if (!LevelManager.LevelInited || main == null) return false;
 
         BuildSpectateList(main);
         Debug.Log("观战: " + _spectateList.Count);
@@ -63,7 +63,7 @@ public class Spectator : MonoBehaviour
         {
             LevelManager.Instance.SetControllingCharacter(_spectateList[_spectateIdx]);
         }
-       
+
 
         if (SceneNet.Instance.sceneVoteActive)
             _spectatorEndOnVotePending = true;

@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 
 namespace EscapeFromDuckovCoopMod;
 
@@ -50,4 +50,3 @@ internal static class VehicleLocalControlPatch
         targetCharacter.ControlOtherCharacter(mounted, -1f);
     }
 }
-

@@ -252,7 +252,7 @@ public static class CoopTool
         return null;
     }
 
-    public static void GoTeleport(string SceneID,string MapName)
+    public static void GoTeleport(string SceneID, string MapName)
     {
         try
         {

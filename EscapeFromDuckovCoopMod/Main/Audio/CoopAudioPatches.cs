@@ -1,4 +1,4 @@
-using Duckov;
+﻿using Duckov;
 using FMOD.Studio;
 
 namespace EscapeFromDuckovCoopMod;

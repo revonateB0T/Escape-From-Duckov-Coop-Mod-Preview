@@ -815,11 +815,11 @@ public class SceneNet : MonoBehaviour
             }
         }
 
-        WaitingSynchronizationUI.Instance.Show();
+        // WaitingSynchronizationUI.Instance.Show();
 
         _cliGateDeadline = Time.realtimeSinceStartup + 10f; // 可调超时（防死锁）吃保底
 
-        while (/*!_cliSceneGateReleased &&*/ Time.realtimeSinceStartup < _cliGateDeadline)
+        while (!_cliSceneGateReleased && Time.realtimeSinceStartup < _cliGateDeadline)
         {
             try
             {
